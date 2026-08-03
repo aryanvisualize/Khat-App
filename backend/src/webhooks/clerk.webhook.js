@@ -15,14 +15,14 @@ router.post("/", async (req, res) => {
     const payload = Buffer.isBuffer(req.body)
       ? req.body.toString("utf8")
       : String(req.body);
-    const request = new Request('http"//internal/webhookss/clerk', {
+    const request = new Request('http://internal/webhooks/clerk', {
       method: "POST",
       headers: new Headers(req.headers),
       body: payload,
     });
 
     const evt = await verifyWebhook(request, { signingSecret });
-    if (evt.type === "user,created" || evt.type === "user.updated") {
+    if (evt.type === "user.created" || evt.type === "user.updated") {
       const u = evt.data;
       const email =
         u.email_addresses?.find((e) => e.id === u.primary_email_address_id)
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     res.status(200).json({ received: true });
   } catch (error) {
     console.error("Error in Clerk webhook:", error);
-    res.status(400).json({message: "Webhook verification failed"})
+    res.status(400).json({message: "Webhook verification failed"});
   }
 });
 
