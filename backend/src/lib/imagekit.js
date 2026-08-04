@@ -11,3 +11,14 @@ function createFileName(originalName = "upload") {
   return `chat-${Date.now()}-${safeName}`;
 }
 
+function uploadChatMedia(file) {
+  const fileName = createFileName(originalName);
+  const result = await imagekit.files.upload({
+    file: await toFile(file.buffer, fileName, {type:  file.mimetype}),
+    fileName,
+    folder: "/chat",
+  });
+  return result.url;
+} 
+
+export {uploadChatMedia, hasImageKitConfig };
